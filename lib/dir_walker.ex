@@ -132,7 +132,7 @@ defmodule DirWalker do
           first_n(rest, n, mappers, result)
         end
 
-      true ->
+      _ ->
         first_n(rest, n, mappers, result)
     end
   end
