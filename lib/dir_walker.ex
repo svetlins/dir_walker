@@ -117,15 +117,14 @@ defmodule DirWalker do
   defp first_n([], _n, _mappers, result),       do: {result, []}
 
   defp first_n([ path | rest ], n, mappers, result) do
-    stat = File.stat!(path)
-    case stat.type do
-      :directory ->
+    case File.stat(path) do
+      { :ok, stat = %{ type: :directory }} ->
         first_n([files_in(path) | rest],
           n,
           mappers,
           mappers.include_dir_names.(mappers.include_stat.(path, stat), result))
 
-      :regular ->
+      { :ok, stat = %{ type: :regular }} ->
         if mappers.matching.(path) do
           first_n(rest, n-1, mappers, [ mappers.include_stat.(path, stat) | result ])
         else
